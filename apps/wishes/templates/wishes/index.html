@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css"
+   href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <link rel="stylesheet" type="text/css"
+   href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  <style>
+    .actions form { display: block; float: left; }
+  </style>
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome {{user.first_name}}</h1>
+        <a href="{% url 'wishes:new' %}" class="button">Make a Wish</a>
+        <a href="{% url 'users:logout' %}" class="button">Logout</a>
+    <div class="wishlist">
+      <h2>Your Wish List</h2>
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Date Added</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+          {% for wish in wishes %}
+            {% if not wish.granted_at %}
+            <tr>
+              <td width="30%">
+                <a href=> {{ wish.name }}</a>
+              </td>
+                <td width="30%">{{ wish.created_at|date }}</td>
+                <td width="70%" class="actions">
+                <form action="{% url 'wishes:grant' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="wish_id" value="{{ wish.id }}">
+                    <input type="submit" value="Granted">
+                </form>
+                <form action="{% url 'wishes:edit' wish.id %}" method="GET">
+                    <input type="submit" value="Edit">
+                </form>
+                <form action="{% url 'wishes:delete' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="wish_id" value="{{ wish.id }}">
+                    <input type="submit" value="Remove">
+                </form>
+
+            </td>
+
+            </tr>
+            {% endif %}
+
+          {% endfor %}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <div class="granted">
+      <h2>Granted  Wishes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Wisher</th>
+            <th>Date Added</th>
+            <th>Date Granted</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for wish in wishes %}
+          {% if wish.granted_at %}
+            <tr>
+              <td>{{ wish.name }}</td>
+              <td>{{ wish.creator.first_name }}</td>
+              <td>{{ wish.created_at|date }}</td>
+              <td>{{ wish.granted_at|date}}</td>
+              <td>
+                  {% csrf_token %}
+                </form>
+              </td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css"
+   href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <link rel="stylesheet" type="text/css"
+   href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Make a Wish</h1>
+    <a href="{% url 'wishes:index' %}" class="button">Home</a>
+    <a href="{% url 'users:logout' %}" class="button">Logout</a>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% for error in errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+    <form action="{% url 'wishes:create' %}" method="post">
+      {% csrf_token %}
+      <label for="name">I wish for:</label>
+      <input type="text" name="name" placeholder="">
+      <label for="description">Description:</label>
+      <textarea name="description" id="" cols="30" rows="10"></textarea>
+      <input type="submit" value="Make Wish">
+    </form>
+  </div>
+</body>
+</html>
